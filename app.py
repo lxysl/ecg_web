@@ -28,9 +28,12 @@ def hello_world():
 @app.route('/predict', methods=['GET', 'POST'])
 def predict():
     if request.method == 'POST':
-        if request.json == "":
-            return jsonify(result='null', probability=0)
-        dic = json.loads(request.json)
+        # print(request.json)
+        dic = request.json
+        if dic == "" or dic is None:
+            return jsonify(success=False, result='null', probability=0)
+        if type(dic) == str:
+            dic = json.loads(dic)
         leads = dic['leads']
         size = dic['size']
         data = dic['data']
@@ -41,7 +44,7 @@ def predict():
         pred_proba = np.amax(preds, axis=1)
         pred_index = np.argmax(preds, axis=1)
         pred_class = classes[pred_index]
-        return jsonify(result=pred_class.tolist(), probability=pred_proba.tolist())
+        return jsonify(success=True, result=pred_class.tolist(), probability=pred_proba.tolist())
     return None
 
 

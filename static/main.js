@@ -35,7 +35,7 @@ function submitECGData() {
     // action for the submit button
     console.log("submit");
 
-    if (!fileDisplay) {
+    if (!fileDisplay.value) {
         window.alert("请在上传前选择文件");
         return;
     }
@@ -89,7 +89,12 @@ function predictECGData(data) {
     }).then(resp => {
         if (resp.ok)
             resp.json().then(data => {
-                displayResult(data);
+                console.log(data.success)
+                if (data.success) {
+                    displayResult(data);
+                } else {
+                    window.alert("Oops! Something went wrong.");
+                }
             });
     }).catch(err => {
         console.log("An error occured", err.message);
